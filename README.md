@@ -1,6 +1,6 @@
 ## TronGod
 
-<img src="extension.png" alt="" width="180">
+<img src="extension.png" alt="" width="270">
 
 Get Tron smart contract params before signing the transaction.
 
