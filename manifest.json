@@ -1,0 +1,29 @@
+{
+  "manifest_version": 2,
+  "name": "TronGod",
+  "version": "0.1.0",
+  "description": "TRON GOD MODE",
+  "author": "llwslc <llwslc@gmail.com>",
+  "permissions": ["storage", "clipboardWrite", "activeTab"],
+  "content_security_policy": "script-src 'self' 'unsafe-eval' 'sha256-askSPy3rDeM+aSvMSWKNbaUq6foI7Sbc9O5T3H8p8aY='; object-src 'self'",
+  "browser_action": {
+    "default_popup": "build/index.html",
+    "default_title": "TronGod"
+  },
+  "background": {
+    "scripts": ["build/backgroundScript.js"],
+    "persistent": true
+  },
+  "content_scripts": [
+    {
+      "matches": ["file://*/*", "http://*/*", "https://*/*"],
+      "js": ["build/contentScript.js"],
+      "run_at": "document_end",
+      "all_frames": true
+    }
+  ],
+  "web_accessible_resources": ["build/injectScript.js"],
+  "icons": {
+    "128": "src/logo.png"
+  }
+}
