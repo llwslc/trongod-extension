@@ -1,16 +1,37 @@
 let _godTriggerSmartContract = false;
 
 // to contentScript
-const setContract = (...params) => {
+const setContract = async (...params) => {
+  const _tronWeb = window.tronWeb;
+  const BigNumber = _tronWeb.BigNumber;
+
+  const val = params[2].callValue ? BigNumber(params[2].callValue).div(1e6).toString() : 0;
+  const tid = params[2].tokenId ? params[2].tokenId : 0;
+  let tname = tid;
+  let tabbr = '';
+  let tval = 0;
+
+  try {
+    const token = await _tronWeb.trx.getTokenByID(tid);
+    const tPrecision = token.precision ? token.precision : 0;
+    tname = token.name ? token.name : tid;
+    tabbr = token.abbr ? token.abbr : tname;
+    tval = params[2].tokenValue ? BigNumber(params[2].tokenValue).div(BigNumber(10).pow(tPrecision)).toString() : 0;
+  } catch (error) {
+    // token does not exist
+  }
+
   window.postMessage({
     method: 'setContractValue',
     data: {
-      addr: window.tronWeb.address.fromHex(params[0]),
+      addr: _tronWeb.address.fromHex(params[0]),
       func: params[1],
       args: JSON.stringify(params[3]),
-      val: params[2].callValue ? params[2].callValue : 0,
-      tid: params[2].tokenId ? params[2].tokenId : 0,
-      tval: params[2].tokenValue ? params[2].tokenValue : 0
+      val,
+      tid,
+      tname,
+      tabbr,
+      tval
     }
   });
 };

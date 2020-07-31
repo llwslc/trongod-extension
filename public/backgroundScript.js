@@ -1,12 +1,7 @@
 console.log('Tron God Mode Background Script');
 
 const godModeKey = 'godMode';
-const addrKey = 'addr';
-const funcKey = 'func';
-const argsKey = 'args';
-const valKey = 'val';
-const tidKey = 'tid';
-const tvalKey = 'tval';
+const contractKey = 'contract';
 
 const getValue = (key, cb) => {
   chrome.storage.local.get([key], res => {
@@ -32,12 +27,7 @@ const addListener = () => {
           break;
         case 'setContractValue':
           const data = req.data ? req.data : {};
-          setValue(addrKey, data.addr ? data.addr : '', () => {});
-          setValue(funcKey, data.func ? data.func : '', () => {});
-          setValue(argsKey, data.args ? data.args : '', () => {});
-          setValue(valKey, data.val ? data.val : 0, () => {});
-          setValue(tidKey, data.tid ? data.tid : 0, () => {});
-          setValue(tvalKey, data.tval ? data.tval : 0, () => {});
+          setValue(contractKey, JSON.stringify(data), () => {});
 
           chrome.windows.getLastFocused({ populate: false }, currentWindow => {
             chrome.windows.create(
@@ -95,25 +85,8 @@ function setGodModeValue(value, cb) {
 }
 
 function getContractValue(cb) {
-  getValue(addrKey, addr => {
-    getValue(funcKey, func => {
-      getValue(argsKey, args => {
-        getValue(valKey, val => {
-          getValue(tidKey, tid => {
-            getValue(tvalKey, tval => {
-              cb({
-                addr,
-                func,
-                args,
-                val,
-                tid,
-                tval
-              });
-            });
-          });
-        });
-      });
-    });
+  getValue(contractKey, data => {
+    cb(data ? JSON.parse(data) : {});
   });
 }
 

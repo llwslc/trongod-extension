@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { CopyOutlined, SearchOutlined } from '@ant-design/icons';
-import { Divider, Input, Typography, Space } from 'antd';
+import { Divider, Input, Typography, Space, Tooltip } from 'antd';
 
 import { getContractValue } from '../utils';
 
@@ -45,6 +45,8 @@ class Contract extends React.Component {
       args: '',
       val: 0,
       tid: 0,
+      tname: '',
+      tabbr: '',
       tval: 0
     };
   }
@@ -55,9 +57,18 @@ class Contract extends React.Component {
         addr: d.addr ? d.addr : '',
         func: d.func ? d.func : '',
         args: d.args ? d.args : '',
+
         val: d.val ? d.val : 0,
         tid: d.tid ? d.tid : 0,
+        tname: d.tname ? d.tname : '',
+        tabbr: d.tabbr ? d.tabbr : '',
         tval: d.tval ? d.tval : 0
+
+        // val: d.val ? d.val : 1,
+        // tid: d.tid ? d.tid : 1002000,
+        // tname: d.tname ? d.tname : 'BitTorrent',
+        // tabbr: d.tabbr ? d.tabbr : 'BTT',
+        // tval: d.tval ? d.tval : 1
       });
     });
   };
@@ -82,12 +93,18 @@ class Contract extends React.Component {
           </Text>
           <Info>{this.state.func}</Info>
 
-          {this.state.val ? <Text>Call Value: {this.state.val} TRX</Text> : null}
+          {this.state.val ? (
+            <Text>
+              Call Value: <Text type="danger">{this.state.val} TRX</Text>
+            </Text>
+          ) : null}
           {this.state.tval ? (
-            <>
-              <Text>Call Token Id: {this.state.tid}</Text>
-              <Text>Call Token Value: {this.state.tval}</Text>
-            </>
+            <Tooltip title={`ID: ${this.state.tid}`}>
+              <Text>Call Token {this.state.tname}: </Text>
+              <Text type="danger">
+                {this.state.tval} {this.state.tabbr}
+              </Text>
+            </Tooltip>
           ) : null}
 
           <Text>
