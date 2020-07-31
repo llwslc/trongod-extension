@@ -1,49 +1,38 @@
 import React from 'react';
 import styled from 'styled-components';
-import { CopyOutlined, CheckOutlined, SearchOutlined } from '@ant-design/icons';
-import { Divider, Input } from 'antd';
-import copy from 'copy-to-clipboard';
+import { CopyOutlined, SearchOutlined } from '@ant-design/icons';
+import { Divider, Input, Typography, Space } from 'antd';
 
 import { getContractValue } from '../utils';
 
 const { TextArea } = Input;
+const { Text, Link } = Typography;
 
-const Title = styled.div`
-  margin: 1em 0;
+const Info = styled.div`
+  width: 100%;
+  height: 32px;
+  border: 1px solid transparent;
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.015);
+  padding: 4px 0.5em;
+  border-radius: 2px;
+  color: rgba(0, 0, 0, 0.65);
+  border-color: #d9d9d9;
+  overflow-wrap: break-word;
 `;
 
-class CopyTag extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      copied: false
-    };
-  }
+const RLink = styled(Link)`
+  float: right;
+`;
 
-  componentDidMount = () => {};
-
-  copyToClipboard = () => {
-    copy(this.props.text);
-
-    this.setState({ copied: true });
-
-    setTimeout(() => {
-      this.setState({ copied: false });
-    }, 3000);
-  };
-
+class CopyIcon extends React.Component {
   render() {
-    return (
-      <div style={{ display: 'inline' }}>
-        {this.state.copied ? (
-          <span>
-            <CheckOutlined /> copied!
-          </span>
-        ) : (
-          <CopyOutlined onClick={this.copyToClipboard} />
-        )}
-      </div>
-    );
+    return <CopyOutlined style={{ color: 'rgba(0, 0, 0, 0.65)' }} />;
+  }
+}
+
+class SearchIcon extends React.Component {
+  render() {
+    return <SearchOutlined style={{ color: 'rgba(0, 0, 0, 0.65)' }} />;
   }
 }
 
@@ -53,40 +42,59 @@ class Contract extends React.Component {
     this.state = {
       addr: '',
       func: '',
-      args: ''
+      args: '',
+      val: 0,
+      tid: 0,
+      tval: 0
     };
   }
 
   componentDidMount = () => {
     getContractValue(d => {
       this.setState({
-        addr: d.addr,
-        func: d.func,
-        args: d.args
+        addr: d.addr ? d.addr : '',
+        func: d.func ? d.func : '',
+        args: d.args ? d.args : '',
+        val: d.val ? d.val : 0,
+        tid: d.tid ? d.tid : 0,
+        tval: d.tval ? d.tval : 0
       });
     });
-  };
-
-  gotoAddr = () => {
-    window.open(`https://tronscan.io/#/contract/${this.state.addr}/code`);
   };
 
   render() {
     return (
       <div style={{ margin: '0 1em 1em 1em' }}>
         <Divider style={{ margin: 0 }} />
-        <Title>
-          Contract Address: <CopyTag text={this.state.addr} />
-        </Title>
-        <Input value={this.state.addr} suffix={<SearchOutlined onClick={this.gotoAddr} />} />
-        <Title>
-          Function Selector: <CopyTag text={this.state.func} />
-        </Title>
-        <Input value={this.state.func} />
-        <Title>
-          Argument Encoding: <CopyTag text={this.state.args} />
-        </Title>
-        <TextArea rows={4} value={this.state.args} />
+        <Space direction="vertical" style={{ margin: '1em 0', width: '100%' }}>
+          <Text>
+            Contract Address: <Text copyable={{ text: this.state.addr, icon: <CopyIcon /> }} />
+          </Text>
+          <Info>
+            {this.state.addr}
+            <RLink href={`https://tronscan.io/#/contract/${this.state.addr}/code`} target="_blank">
+              <SearchIcon />
+            </RLink>
+          </Info>
+
+          <Text>
+            Function Selector: <Text copyable={{ text: this.state.func, icon: <CopyIcon /> }} />
+          </Text>
+          <Info>{this.state.func}</Info>
+
+          {this.state.val ? <Text>Call Value: {this.state.val} TRX</Text> : null}
+          {this.state.tval ? (
+            <>
+              <Text>Call Token Id: {this.state.tid}</Text>
+              <Text>Call Token Value: {this.state.tval}</Text>
+            </>
+          ) : null}
+
+          <Text>
+            Argument Encoding: <Text copyable={{ text: this.state.args, icon: <CopyIcon /> }} />
+          </Text>
+          <TextArea rows={4} value={this.state.args} />
+        </Space>
       </div>
     );
   }
