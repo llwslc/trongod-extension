@@ -7,7 +7,10 @@ const setContract = (...params) => {
     data: {
       addr: window.tronWeb.address.fromHex(params[0]),
       func: params[1],
-      args: JSON.stringify(params[3])
+      args: JSON.stringify(params[3]),
+      val: params[2].callValue ? params[2].callValue : 0,
+      tid: params[2].tokenId ? params[2].tokenId : 0,
+      tval: params[2].tokenValue ? params[2].tokenValue : 0
     }
   });
 };

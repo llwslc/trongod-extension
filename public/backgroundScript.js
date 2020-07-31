@@ -4,6 +4,9 @@ const godModeKey = 'godMode';
 const addrKey = 'addr';
 const funcKey = 'func';
 const argsKey = 'args';
+const valKey = 'val';
+const tidKey = 'tid';
+const tvalKey = 'tval';
 
 const getValue = (key, cb) => {
   chrome.storage.local.get([key], res => {
@@ -32,6 +35,9 @@ const addListener = () => {
           setValue(addrKey, data.addr ? data.addr : '', () => {});
           setValue(funcKey, data.func ? data.func : '', () => {});
           setValue(argsKey, data.args ? data.args : '', () => {});
+          setValue(valKey, data.val ? data.val : 0, () => {});
+          setValue(tidKey, data.tid ? data.tid : 0, () => {});
+          setValue(tvalKey, data.tval ? data.tval : 0, () => {});
 
           chrome.windows.getLastFocused({ populate: false }, currentWindow => {
             chrome.windows.create(
@@ -92,10 +98,19 @@ function getContractValue(cb) {
   getValue(addrKey, addr => {
     getValue(funcKey, func => {
       getValue(argsKey, args => {
-        cb({
-          addr,
-          func,
-          args
+        getValue(valKey, val => {
+          getValue(tidKey, tid => {
+            getValue(tvalKey, tval => {
+              cb({
+                addr,
+                func,
+                args,
+                val,
+                tid,
+                tval
+              });
+            });
+          });
         });
       });
     });
