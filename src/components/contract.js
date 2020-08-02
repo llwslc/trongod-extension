@@ -1,16 +1,15 @@
 import React from 'react';
 import styled from 'styled-components';
 import { CopyOutlined, SearchOutlined } from '@ant-design/icons';
-import { Divider, Input, Typography, Space, Tooltip } from 'antd';
+import { Divider, Typography, Space, Tooltip } from 'antd';
 
 import { getContractValue } from '../utils';
 
-const { TextArea } = Input;
 const { Text, Link } = Typography;
 
 const Info = styled.div`
   width: 100%;
-  height: 32px;
+  min-height: ${props => (props.rows ? props.rows * 32 : 32)}px;
   border: 1px solid transparent;
   box-shadow: 0 2px 0 rgba(0, 0, 0, 0.015);
   padding: 4px 0.5em;
@@ -64,6 +63,9 @@ class Contract extends React.Component {
         tabbr: d.tabbr ? d.tabbr : '',
         tval: d.tval ? d.tval : 0
 
+        // addr: d.addr ? d.addr : 'addr',
+        // func: d.func ? d.func : 'func',
+        // args: d.args ? d.args : 'arg',
         // val: d.val ? d.val : 1,
         // tid: d.tid ? d.tid : 1002000,
         // tname: d.tname ? d.tname : 'BitTorrent',
@@ -110,7 +112,7 @@ class Contract extends React.Component {
           <Text>
             Argument Encoding: <Text copyable={{ text: this.state.args, icon: <CopyIcon /> }} />
           </Text>
-          <TextArea rows={4} value={this.state.args} />
+          <Info rows={4}>{this.state.args}</Info>
         </Space>
       </div>
     );
