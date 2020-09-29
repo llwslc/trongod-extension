@@ -39,7 +39,15 @@ const addListener = () => {
                 left: currentWindow.width - 25 - 360,
                 top: 25
               },
-              () => {}
+              win => {
+                setTimeout(() => {
+                  chrome.windows.get(win.id, _win => {
+                    if (_win) {
+                      chrome.windows.remove(_win.id);
+                    }
+                  });
+                }, 60 * 1000);
+              }
             );
           });
 

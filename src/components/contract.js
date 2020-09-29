@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { CopyOutlined, SearchOutlined } from '@ant-design/icons';
-import { Divider, Typography, Space, Tooltip } from 'antd';
+import { Button, Divider, Typography, Space, Tooltip } from 'antd';
 
 import { getContractValue } from '../utils';
 
@@ -75,6 +75,10 @@ class Contract extends React.Component {
     });
   };
 
+  close = () => {
+    window.close();
+  };
+
   render() {
     return (
       <div style={{ margin: '0 1em 1em 1em' }}>
@@ -113,6 +117,12 @@ class Contract extends React.Component {
             Argument Encoding: <Text copyable={{ text: this.state.args, icon: <CopyIcon /> }} />
           </Text>
           <Info rows={4}>{this.state.args}</Info>
+
+          {this.props.popup && (
+            <Button type="primary" danger block onClick={this.close}>
+              CLOSE
+            </Button>
+          )}
         </Space>
       </div>
     );

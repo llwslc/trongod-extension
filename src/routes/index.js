@@ -20,8 +20,8 @@ class App extends React.Component {
   render() {
     return (
       <div className="app" style={{ width: '360px', padding: 0, overflowY: 'scroll' }}>
-        {this.state.popup ? null : <Settings />}
-        <Contract />
+        {!this.state.popup && <Settings />}
+        <Contract popup={this.state.popup} />
       </div>
     );
   }
